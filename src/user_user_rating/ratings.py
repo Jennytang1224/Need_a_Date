@@ -32,9 +32,9 @@ def merge_actions(v,b,f,m):
     df.rename(columns = {'flag':'flag_m'}, inplace = True)
 
     print 'number of unique active users have taken actions:', len(df['user_id'].unique())
-    print 'number of unique actions:', len(df)
+    print 'number of actions:', len(df)
 
-def convert(row):
+def convert_actions(row):
     '''
     convert behaviors to ratings:
     message = 4
@@ -58,7 +58,7 @@ def add_ratings(df):
     '''
     apply convert function to df and add rating column to df
     '''
-    df['rating'] = df.apply(actions, axis=1)
+    df['rating'] = df.apply(convert_actions, axis=1)
 
 def save_file(df,path):
     '''
@@ -70,4 +70,5 @@ def convert_rating_matrix(rating_table):
     '''
     convert rating table to rating matrix
     '''
-    rating_matrix.to_csv('/Users/jennytang/Desktop/2rb/data/saved/rating_matrix_f.csv',index=False)
+    rating_matrix = rating_table.pivot(index='user_id', columns='host_id',
+    values='rating')
