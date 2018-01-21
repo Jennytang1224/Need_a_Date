@@ -95,8 +95,9 @@ def recommendation(cold_user_id,top_sim_lst,m):
     return rec
 
 if __name__ == '__main__':
-    rating_active_f = pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/eval/rating_f_rm.csv')
-    rating_active_m = pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/eval/rating_m_rm.csv')
+    # example
+    rating_active_f = pd.read_csv('rating_f_rm.csv')
+    rating_active_m = pd.read_csv('rating_m_rm.csv')
     cold_user_id = 21104
     user_profile = user_m_cold
     hosts_profile = item_m

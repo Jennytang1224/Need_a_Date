@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.decomposition import NMF
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.cross_validation import train_test_split
@@ -44,15 +45,42 @@ def nmf(profile_sim_score):
     '''to find latent features in similarity score matrix '''
     for i in range(1,20): #find i with lowest reconstruction score:
         model= NMF(n_components=i, init='random', random_state=0,alpha=.01)
-        W = model.fit_transform(sim_f)
+        W = model.fit_transform(sim)
         print 'reconstruction error:', model.reconstruction_err_
-        # i=2 has lowest error for female
 
         #add id column to array W, and make W to a DataFrame
-W_to_db = pd.DataFrame(W)
-W_to_db.index = item_data_f['host_id']
-W_to_db.reset_index(inplace=True)
-return W_to_db
+        W_to_df = pd.DataFrame(W)
+        W_to_df.index = item_data_f['host_id']
+        W_to_df.reset_index(inplace=True)
+        return W_to_df
+
+def fit_pca():
+    sum_rating = pd.DataFrame(rating_f[rating_f['host_id'].isin(item_data_f['host_id'])].groupby('host_id')['rating'].sum()/rating_f['host_id'].value_counts())
+    # print max(sum_rating.values),min(sum_rating.values)
+
+    sum_rating.reset_index(inplace=True)
+    sum_rating.columns=['host_id','score']
+    sum_rating['score'] = sum_rating['score'].round(0)
+    # print len(sum_rating['score'])
+    sum_rating['score'].value_counts()
+
+    target = sum_rating['score'].values
+    df = item_data_f.drop('host_id',axis=1)
+    # first 2 PC
+    scaler = StandardScaler().fit(df)
+    scaled_data=scaler.transform(df)
+    pca=PCA(n_components=2)
+    pca.fit(scaled_data)
+    x_pca=pca.transform(scaled_data)
+    # print scaled_data.shape, x_pca.shape
+
+def plot_pca():
+    plt.figure(figsize=(12,8))
+    plt.scatter(x_pca[:,0],x_pca[:,1],c=target,cmap='plasma')
+    #c=cancer['target']: color the points by target categories
+    plt.xlabel('First Principal Component')
+    plt.ylabel('Second Principal Component')
+
 
 def kmeans():
     kmeans = KMeans(n_clusters=4).fit(temp_item_data)
@@ -79,5 +107,3 @@ def kmeans():
     plt.ylabel('rating')
     plt.title('photos_count vs. rating')
     plt.show()
-if __name__=='__main__':
-    label = host_label
