@@ -3,19 +3,12 @@ import pandas as pd
 import graphlab
 import graphlab.aggregate as agg
 import matplotlib.pyplot as plt
-# %matplotlib inline
-# import pylab as p
-# p.show()
 
 def sframe(df):
     sf_data = graphlab.SFrame(df)
     return sf_data
 
 def train_test_split(rating):
-    training_data, test_data = graphlab.recommender.util.random_split_by_user(rating,
-    user_id='user_id',
-    item_id='host_id',
-    )
 
     training_data, validation_data = graphlab.recommender.util.random_split_by_user(training_data,
     user_id='user_id',
@@ -33,10 +26,10 @@ def ranking_model(training_data,validation_data,item_data):
     user_id = 'user_id',
     item_id = 'host_id',
     target = 'rating',
-    item_data = W) #W comes from NMF
+    item_data = W_m) #W comes from NMF
     rmse_results_rank = model_rank.evaluate(validation_data)
-
-    model_rank_m.save('model_rank')
+    model_rank.save('model_rank_m_new')
+    return model_rank, rmse_results_rank
 
 def compare_models(list_of_models,metric):
     '''
@@ -59,19 +52,23 @@ def make_rec(model,id):
 
 if __name__=='__main__':
     # female
-    rating_m = pd.read_csv('rating_m_exist.csv') # female rate male
-    item_m = pd.read_csv('item_m.csv') # male hosts profile data
-    W_m = pd.read_csv('W_m_df.csv') # latent features of male profile
+    rating_m = pd.read_csv('rating_m_exist.csv') # male rate male
+    item_m = pd.read_csv('item_m.csv') # female hosts profile data
+    W_m = pd.read_csv('W_m_df.csv') #latent features for m rates f
+
     rating_f = pd.read_csv('rating_f_exist.csv') # female rate male
     item_f = pd.read_csv('item_f.csv') # male hosts profile data
-    W_f= pd.read_csv('W_f_df.csv') #latent features of female profile
+    W_f= pd.read_csv('W_f_df.csv')
+    # user_data_f = pd.read_csv('user_data_f.csv') # female users profile data
+    # sim_m = np.load('sim_f.npy') # similarity score between all male hosts
 
     action_m = graphlab.SFrame(rating_m)
     item_data_m = graphlab.SFrame(item_m)
     W_m= graphlab.SFrame(W_m)
-    action_f= graphlab.SFrame(rating_f)
-    item_data_f = graphlab.SFrame(item_f)
-    W_f= graphlab.SFrame(W_f)
+    #
+    # action_f= graphlab.SFrame(rating_f)
+    # item_data_f = graphlab.SFrame(item_f)
+    # W_f= graphlab.SFrame(W_f)
 
     training_data,validation_data,test_data = train_test_split(action_m)
 

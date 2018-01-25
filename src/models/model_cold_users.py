@@ -58,7 +58,6 @@ def find_sim_hosts(cold_user_id, user_profile, hosts_profile, k):
     host_data = hosts_profile
     closest_lst = find_closest(user_data,host_data,n) # location filter get closest hosts like cold user
 #     print closest_lst
-
     store = dict()
     for i in closest_lst: # i is index of the host # profile_sim filter among the closest users
         host = np.array(hosts_profile.iloc[i].values.tolist()).reshape(1,-1)
@@ -68,11 +67,8 @@ def find_sim_hosts(cold_user_id, user_profile, hosts_profile, k):
         key = hosts_profile['host_id'][i] # convert index to host_id
         store[key] = sim #dict{index:sim_score}
 #     print store
-
     top_sim_lst = []
     for key, value in sorted(store.iteritems(), key=lambda (key,value): (value,key), reverse=True)[:k]:
-#         value = value[0,0]
-#         print "%s: %s" % (key, value)
         top_sim_lst.append(key)
     return top_sim_lst
 
@@ -95,9 +91,8 @@ def recommendation(cold_user_id,top_sim_lst,m):
     return rec
 
 if __name__ == '__main__':
-    # example
-    rating_active_f = pd.read_csv('rating_f_rm.csv')
-    rating_active_m = pd.read_csv('rating_m_rm.csv')
+    rating_active_f = pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/eval/rating_f_rm.csv')
+    rating_active_m = pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/eval/rating_m_rm.csv')
     cold_user_id = 21104
     user_profile = user_m_cold
     hosts_profile = item_m

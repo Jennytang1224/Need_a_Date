@@ -57,13 +57,13 @@ def popularity_model(user_id,closest_hosts_id,host_pop_scores,k):
     return rec
 
 if __name__=='__main__':
-    #example
-    user_id = 2878
-    host_data_f = pd.read_csv('item_f.csv')
-    user_data_m = pd.read_csv('user_m_exist.csv')
 
-    f_pop_scores = pd.read_csv('item_f_pop_score.csv')
-    m_pop_scores =pd.read_csv('item_m_pop_score.csv')
+    user_id = 2878
+    host_data_f = pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/rating/project/item_f.csv')
+    user_data_m = pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/rating/project/exist/user_m_exist.csv')
+
+    f_pop_scores = pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/rating/project/item_f_pop_score.csv')
+    m_pop_scores =pd.read_csv('/Users/jennytang/Desktop/2rb/data/saved/rating/project/item_m_pop_score.csv')
     n=10
     k=5
     closest_hosts = result(user_id,user_data_m,host_data_f,n)
